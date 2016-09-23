@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# TODO: add a user for hpottinger, add it to sudo
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -141,6 +143,27 @@ config.ssh.insert_key = false
     # This sets a Puppet Fact named "github_ssh_status" on the VM.
     # That fact is then used by 'setup.pp' to determine whether to connect to a Git Repo via SSH or HTTPS (see setup.pp)
     config.vm.provision :shell, :inline => "echo 'Testing SSH connection to GitHub on VM...' && mkdir -p /etc/facter/facts.d/ && ssh -T -q -oStrictHostKeyChecking=no git@github.com; echo github_ssh_status=$? > /etc/facter/facts.d/github_ssh.txt", run: "always"
+
+
+    #------------------------
+    # Provisioning Scripts
+    #    These scripts run in the order in which they appear, and setup the virtual machine (VM) for us.
+    #------------------------
+
+    # Shell script to set up swap space for this VM
+
+    if File.exists?("config/increase-swap.sh")
+        config.vm.provision :shell, :inline => "echo '   > > > running local increase-swap.sh to ensure enough memory is available, via a swap file.'"
+        config.vm.provision :shell, :path => "config/increase-swap.sh"
+    else
+        config.vm.provision :shell, :inline => "echo '   > > > running default increase-swap.sh scripte to ensure enough memory is available, via a swap file.'"
+        config.vm.provision :shell, :path => "increase-swap.sh"
+    end
+
+    # copy the inputrc dotfile to the Vagrant user's home folder, if the config file exists in dotfiles
+    if File.exists?("config/dotfiles/inputrc")
+        config.vm.provision :shell, :inline => "cp /vagrant/config/dotfiles/inputrc /home/vagrant/.inputrc"
+    end
 
 
 end
