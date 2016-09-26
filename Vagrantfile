@@ -165,5 +165,10 @@ config.ssh.insert_key = false
         config.vm.provision :shell, :inline => "cp /vagrant/config/dotfiles/inputrc /home/vagrant/.inputrc"
     end
 
+    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+    config.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
+    config.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: false
+
+
 
 end
