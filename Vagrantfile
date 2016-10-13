@@ -20,13 +20,13 @@ Vagrant.configure("2") do |config|
   config.vm.define "ansibleplayground"
 
   # Hostname for virtual machine
-  config.vm.hostname = "ansibleplayground.vagrant.dev"
+  config.vm.hostname = "apg.vagrant.dev"
 
   # BEGIN Landrush (https://github.com/phinze/landrush) configuration
     # This section will only be triggered if you have installed "landrush"
     #     vagrant plugin install landrush
     if Vagrant.has_plugin?('landrush')
-        config.landrush.enable
+        config.landrush.enabled = true
         config.landrush.tld = 'vagrant.dev'
 
         # let's use the Google free DNS
@@ -72,13 +72,13 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
+  config.vm.provider "virtualbox" do |vb|
+     # Display the VirtualBox GUI when booting the machine
+     #vb.gui = true
   #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+     # Customize the amount of memory on the VM:
+     vb.memory = "2048"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
